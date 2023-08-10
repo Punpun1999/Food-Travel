@@ -6,4 +6,18 @@ class Actividad:
         self.hora_inicio = hora_inicio
 
     def to_dict(self):
-        return self.__dict__
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "destino_id": self.destino_id,
+            "hora_inicio": self.hora_inicio
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            data["id"],
+            data["nombre"],
+            data["destino_id"],
+            data["hora_inicio"]
+        )

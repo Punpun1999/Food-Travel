@@ -1,13 +1,12 @@
 import tkinter as tk
+from views.mapa_destinos import MapaDestinosCulinarios
+from views.loguin import VentanaInicioSesion
 
-class FoodTravelApp(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Food Travel")
-        self.geometry("800x600")
-        # Título de la aplicación
-        title_label = tk.Label(self, text="Bienvenido a Food Travel", font=("Helvetica", 20))
-        title_label.pack(pady=20)
 if __name__ == "__main__":
-    app = FoodTravelApp()
-    app.mainloop()
+    root = tk.Tk()
+
+    # Ruta del archivo JSON con los datos de los destinos culinarios
+    destinos_json_path = "data/destinos_culinarios.json"
+    mapa_destinos = MapaDestinosCulinarios(root, destinos_json_path)
+    ventana_inicio=VentanaInicioSesion(root)
+    root.mainloop()

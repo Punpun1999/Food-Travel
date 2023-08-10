@@ -5,4 +5,16 @@ class Ubicacion:
         self.coordenadas = coordenadas
 
     def to_dict(self):
-        return self.__dict__
+        return {
+            "id": self.id,
+            "direccion": self.direccion,
+            "coordenadas": self.coordenadas
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            data["id"],
+            data["direccion"],
+            data["coordenadas"]
+        )
