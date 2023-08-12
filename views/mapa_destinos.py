@@ -5,14 +5,16 @@ from PIL import Image, ImageTk
 import json
 from tkintermapview import TkinterMapView
 from models.destino_culunario import DestinoCulinario
+from models.Review import Review
 
 
 class MapaDestinosCulinarios:
-    def __init__(self, root, destinos_json_path):
+    def __init__(self, root, destinos_json_path, usuario):
         self.root = root
         self.root.title("Mapa de Destinos Culinarios en Salta")
-
+        self.usuario = usuario
         self.destinos_json_path = destinos_json_path
+
         self.destinos_culinarios = self.cargar_destinos_culinarios()
         self.frame_mapa = tk.Frame(self.root, width=600, height=600)
         self.frame_mapa.pack(side='right')
@@ -52,6 +54,7 @@ class MapaDestinosCulinarios:
             # Establecer el texto del marcador
             texto_marcador = f"{destino.nombre}\n{destino.tipo_cocina}\nPrecio: {destino.precio_minimo}-{destino.precio_maximo}"
             marker.set_text(texto_marcador)
+
 
     def guardar_destinos_culinarios(self):
         data = [destino.to_dict() for destino in self.destinos_culinarios]
@@ -154,3 +157,43 @@ class MapaDestinosCulinarios:
         self.guardar_destinos_culinarios()
         self.refrescar_mapa()
         ventana_agregar_destino.destroy()
+
+    def mostrar_ventana_agregar_comentario(self, destino):
+        ventana_agregar_comentario = tk.Toplevel(self.root)
+        ventana_agregar_comentario.title("Agregar Comentario al Destino")
+
+        tk.Label(ventana_agregar_comentario, text="Calificación (1-5):").pack()
+        calificacion_var = tk.IntVar()
+        tk.Entry(ventana_agregar_comentario, textvariable=calificacion_var).pack()
+
+        tk.Label(ventana_agregar_comentario, text="Comentario:").pack()
+        comentario_var = tk.StringVar()
+        tk.Entry(ventana_agregar_comentario, textvariable=comentario_var).pack()
+
+        tk.Label(ventana_agregar_comentario, text="Estado de Ánimo:").pack()
+        animo_var = tk.StringVar()
+        tk.Entry(ventana_agregar_comentario, textvariable=animo_var).pack()
+
+        tk.Button(ventana_agregar_comentario, text="Guardar", command=lambda: self.guardar_comentario(
+            ventana_agregar_comentario,
+            destino,
+            calificacion_var.get(),
+            comentario_var.get(),
+            animo_var.get()
+        )).pack()
+
+
+    def guardar_comentario(self, ventana_agregar_comentario, destino, calificacion, comentario, animo):
+        nuevo_comentario = Review(
+            id_destino=destino.id,
+            id_usuario=self.usuario.id,
+            calificacion=calificacion,
+            comentario=comentario,
+            animo=animo
+        )
+
+        # Asociar el comentario con el destino
+        destino.reviews.append(nuevo_comentario.to_dict())
+        self.guardar_destinos_culinarios()
+
+        ventana_agregar_comentario.destroy()

@@ -4,6 +4,7 @@ import json
 from tkinter import messagebox
 from views.registro_usuario import VentanaRegistro
 from views.mapa_destinos import MapaDestinosCulinarios
+from models.Usuario import Usuario
 
 class VentanaInicioSesion:
     def __init__(self, root):
@@ -38,10 +39,10 @@ class VentanaInicioSesion:
             usuarios = []
 
         # Verificar las credenciales ingresadas con los datos almacenados en el archivo JSON
-        for usuario in usuarios:
-            if usuario["nombre_usuario"] == nombre_usuario and usuario["contraseña"] == contraseña:
-                messagebox.showinfo("Inicio de Sesión", f"Inicio de sesión exitoso. Usuario: {nombre_usuario}")
-                self.abrir_ventana_principal()
+        for usuario_data in usuarios:
+            if usuario_data["nombre_usuario"] == nombre_usuario and usuario_data["contraseña"] == contraseña:
+                usuario = Usuario.from_dict(usuario_data)  # Crea una instancia del modelo Usuario
+                self.abrir_mapa_destinos(usuario)  # Abre el mapa de destinos para el usuario
                 return
 
         messagebox.showerror("Inicio de Sesión", "Credenciales incorrectas. Vuelve a intentarlo.")
@@ -49,5 +50,19 @@ class VentanaInicioSesion:
     def abrir_ventana_registro(self):
         ventana_registro = tk.Toplevel(self.root)
         ventana_registro.title("Registro de Usuario")
-        VentanaRegistro(ventana_registro)
+        VentanaRegistro(ventana_registro) 
+
+    def abrir_mapa_destinos(self, usuario):
+        ventana_mapa = tk.Toplevel(self.root)
+        ventana_mapa.title(f"Mapa de Destinos Culinarios en Salta - Usuario: {usuario.nombre_usuario}")
+        
+        destinos_json_path = "data/destinos_culinarios.json"  # Ruta del archivo JSON
+        MapaDestinosCulinarios(ventana_mapa, destinos_json_path, usuario)  # Pasa la ruta del JSON y el usuario
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    ventana_inicio_sesion = VentanaInicioSesion(root)
+    root.mainloop()
+
 

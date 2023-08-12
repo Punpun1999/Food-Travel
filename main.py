@@ -1,5 +1,4 @@
 import tkinter as tk
-from views.mapa_destinos import MapaDestinosCulinarios
 from views.loguin import VentanaInicioSesion
 
 if __name__ == "__main__":
@@ -7,6 +6,9 @@ if __name__ == "__main__":
 
     # Ruta del archivo JSON con los datos de los destinos culinarios
     destinos_json_path = "data/destinos_culinarios.json"
-    mapa_destinos = MapaDestinosCulinarios(root, destinos_json_path)
-    ventana_inicio=VentanaInicioSesion(root)
+    
+    # Crea una instancia de la ventana de inicio de sesión
+    ventana_inicio = VentanaInicioSesion(root)
+    
+    # Inicia el bucle principal de la aplicación
     root.mainloop()

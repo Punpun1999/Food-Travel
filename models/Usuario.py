@@ -21,3 +21,15 @@ class Usuario:
             "correo": self.correo,
             "contraseña": self.contraseña
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            data["nombre"],
+            data["apellido"],
+            data["correo"],
+            data["contraseña"],
+            data["nombre_usuario"],
+            data.get("historial_rutas", [])
+        )
+
